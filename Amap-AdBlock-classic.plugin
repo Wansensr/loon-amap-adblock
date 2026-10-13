@@ -1,0 +1,44 @@
+#!name = 高德地图去广告（修复版·经典语法）
+#!desc = 过滤高德地图开屏广告、各页面推广，精简我的页面；老版本 Loon 用这一份
+#!author = DeepSeek（原始规则：@RuCu6 @kelv1n1n @可莉）
+#!homepage = https://github.com/Wansensr/loon-amap-adblock
+#!icon = https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/amap-icon.png
+#!system = iOS
+#!type = normal
+#!date = 2026-10-13
+#!tag = 去广告
+
+[Rule]
+# 广告专用域名：整域拒绝，不需要 MitM
+DOMAIN,amap-aos-info-nogw.amap.com,REJECT
+DOMAIN,free-aos-cdn-image.amap.com,REJECT
+DOMAIN,optimus-ads.amap.com,REJECT
+DOMAIN-SUFFIX,v.smtcdns.com,REJECT
+
+[Rewrite]
+# 经典 Rewrite 语法（Loon 3.5.1(978) 之前的老配置用这一份；新版 Loon 建议用 Amap-AdBlock.plugin）
+
+# ===== 开屏广告 =====
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/valueadded\/alimama\/splash_screen reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/aos\/alimama\/ reject-dict
+
+# ===== 首页 / 搜索页推广 =====
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/scene\/recommend reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/search\/new_hotword reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/faas\/amap-navigation\/main-page-(assets|location) reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/mapapi\/hint_text\/offline_data reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/valueadded\/weather reject-dict
+
+# ===== 消息与推送运营 =====
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/message\/notice\/list reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/msgbox\/pull reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/asa\/ads_attribution reject-dict
+
+# ===== 弹窗与广告素材 =====
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/boss\/order_web\/ reject-dict
+^https?:\/\/([a-z0-9-]+\.)*amap\.com\/uploadimg\/[A-Za-z0-9]+\.gif reject-img
+^https?:\/\/render-oss-cdn\.amap\.com\/render\/studio-dev\/image\/ reject-img
+
+[Mitm]
+hostname = *.amap.com
