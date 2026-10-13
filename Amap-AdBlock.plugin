@@ -1,5 +1,5 @@
 #!name=高德地图去广告（修复版）
-#!desc=v4 · 拦截项与原插件一致（开屏+各页面推广，精简我的页面）；脚本走 jsDelivr 国内可达
+#!desc = v5 · 高德地图去广告：开屏 + 各页面推广（含榜单卡/探索页文案），拦截项与原插件一致；脚本走 jsDelivr 固定版本
 #!openUrl=https://apps.apple.com/cn/app/id461703208
 #!author=RuCu6, kelv1n1n, 可莉🅥（原插件 hub.kelee.one）；本仓库为自托管修复版
 #!homepage=https://github.com/Wansensr/loon-amap-adblock
@@ -42,20 +42,24 @@ request if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:order\/car\/(?:f
 request if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:pay\/web\/paySuccess\/info\/request|transportation\/diversion\/resource\/driving)/i then reject_dict(200)
 response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?/i then response.json.delete("data.carTips.data.popupInfo")
 
+# 高德后加的推广接口（原插件没有）：榜单卡、探索页推广文案
+request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/info_bff\/rankingCard(?:\?|$)/i then reject_dict(200)
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend(?:\?|$)/i then response.json.jq('if .data then .data.shadingWords = {} else . end')
+
 [Script]
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/aos\/perception\/publicTravel\/beforeNavi\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除路线规划推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/bus\/plan\/integrate\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除路线规划、导航结束页推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/c3frontend\/(?:af-(?:hotel|launch)\/page\/main|af-nearby\/nearby)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除导航详情页底部酒店、处理附近页", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/perception\/drive\/(?:routeInfo|routePlan)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除路线规划推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search_bff\/hotword\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除搜索栏推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除搜索详情页推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/(?:card-service-plan-home|main-page)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除首页推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除首页推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaasv3\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除我的页面推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search\/nearbyrec_smart\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除附近页推广", requires_body=true
-response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:car\/order\/content_info|order_web\/friendly_information)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除打车页推广卡片、弹窗", requires_body=true
-response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/promotion-web\/resource(\/home)?\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除打车页红点角标、天气图标", requires_body=true
-response if ${url} ~= /^https:\/\/(?:info|m5)\.amap\.com\/ws\/shield\/search\/(?:common\/coupon\/info|poi\/detail)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js") with tag="移除导航详情页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/aos\/perception\/publicTravel\/beforeNavi\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除路线规划推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/bus\/plan\/integrate\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除路线规划、导航结束页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/c3frontend\/(?:af-(?:hotel|launch)\/page\/main|af-nearby\/nearby)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除导航详情页底部酒店、处理附近页", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/perception\/drive\/(?:routeInfo|routePlan)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除路线规划推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search_bff\/hotword\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除搜索栏推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除搜索详情页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/(?:card-service-plan-home|main-page)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除首页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除首页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas(?:v3)?(?:\?|$)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除我的页面推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search\/nearbyrec_smart(?:\?|$)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除附近页推广", requires_body=true
+response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:car\/order\/content_info|order_web\/friendly_information)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除打车页推广卡片、弹窗", requires_body=true
+response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/promotion-web\/resource(\/home)?\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除打车页红点角标、天气图标", requires_body=true
+response if ${url} ~= /^https:\/\/(?:info|m5)\.amap\.com\/ws\/shield\/search\/(?:common\/coupon\/info|poi\/detail)/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除导航详情页推广", requires_body=true
 
 [MitM]
 hostname=*.amap.com
