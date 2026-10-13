@@ -42,7 +42,7 @@ DOMAIN-SUFFIX, v.smtcdns.com, REJECT
 ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\? response-body-json-del data.carTips.data.popupInfo
 
 ^https?:\/\/m5\.amap\.com\/ws\/info_bff\/rankingCard reject-dict
-^https?:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend response-body-json-jq '.data.shadingWords = {}'
+^https?:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend response-body-json-del data.shadingWords
 
 [Script]
 # 需要改响应体才能摘干净的推广（脚本随本仓库自托管，规则与原插件一致）
@@ -54,7 +54,7 @@ http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/search_bff\/hotword\? script
 http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除搜索详情页推广
 http-response ^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/(?:card-service-plan-home|main-page) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除首页推广
 http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1\? script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除首页推广
-http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas(?:\?|$) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除我的页面推广
+http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas(?:v3)?(?:\?|$) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除我的页面推广
 http-response ^https:\/\/m5\.amap\.com\/ws\/shield\/search\/nearbyrec_smart(?:\?|$) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除附近页推广
 http-response ^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:car\/order\/content_info|order_web\/friendly_information) script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除打车页推广卡片、弹窗
 http-response ^https:\/\/m5-zb\.amap\.com\/ws\/promotion-web\/resource(\/home)?\? script-path=https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js, requires-body=true, tag=移除打车页红点角标、天气图标
