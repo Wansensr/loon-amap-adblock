@@ -6,6 +6,7 @@
 引用地址 https://raw.githubusercontent.com/RuCu6/Loon/refs/heads/main/Scripts/amap.js
 */
 // 2026-03-09 08:15
+// 2026-10-13 本项目修改：nodefaasv3 分支同时匹配新版 nodefaas 路径；其余逻辑未改动
 
 const url = $request.url;
 if (!$response.body) $done({});
@@ -192,7 +193,7 @@ if (url.includes("/aos/perception/publicTravel/beforeNavi")) {
       delete obj.data[i];
     }
   }
-} else if (url.includes("/shield/dsp/profile/index/nodefaasv3")) {
+} else if (/\/shield\/dsp\/profile\/index\/nodefaas(?:v3)?/.test(url)) { // 同时匹配 nodefaasv3 与新版 nodefaas
   // 我的页面
   if (obj?.data) {
     if (obj?.data?.tipData) {
