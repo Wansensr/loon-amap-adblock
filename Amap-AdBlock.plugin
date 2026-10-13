@@ -1,5 +1,5 @@
 #!name=高德地图去广告（修复版）
-#!desc = v5 · 高德地图去广告：开屏 + 各页面推广（含榜单卡/探索页文案），拦截项与原插件一致；脚本走 jsDelivr 固定版本
+#!desc = v6 · 高德地图去广告：开屏 + 各页面推广；榜单卡、我的页面活动入口、探索/附近页推荐流整条拦截；脚本走 jsDelivr 固定版本
 #!openUrl=https://apps.apple.com/cn/app/id461703208
 #!author=RuCu6, kelv1n1n, 可莉🅥（原插件 hub.kelee.one）；本仓库为自托管修复版
 #!homepage=https://github.com/Wansensr/loon-amap-adblock
@@ -10,9 +10,9 @@
 #!loon_version=3.5.1(998)
 #!date=2026-10-13
 #
-# 规则逐条取自原插件（kelee.one · Amap_remove_ads · 2026-10-02），不新增任何拦截项。
-# 仅两处必要改动：① 脚本改本仓库自托管（原脚本所在域名已失效，规则本身没动）；
-#                ② 开屏一条由「脚本改响应体」换成「请求阶段返回空 JSON」（拦的是同一个接口）。
+# 规则逐条取自原插件（kelee.one · Amap_remove_ads · 2026-10-02）。
+# 改动：① 脚本改本仓库自托管（原脚本域名已失效）；
+#       ② 开屏改为请求阶段返回空 JSON（同一接口）；③ 榜单卡、我的页面活动入口、探索/附近页推荐流按用户要求整条拦截。
 [Rule]
 DOMAIN, amap-aos-info-nogw.amap.com, REJECT
 DOMAIN, free-aos-cdn-image.amap.com, REJECT
@@ -34,7 +34,7 @@ request if ${url} ~= /^https:\/\/ai\.amap\.com\/v1\/ai_rec\//i then reject_dict(
 request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/aos\/main\/page\/product\/list\?/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc|usr-profile-fc\/homeV2)/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/(?:mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/search\/new_hotword)/i then reject_dict(200)
-request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend\?/i then reject_dict(200)
+request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend(?:\?|$)/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/valueadded\/weather\/v2\?/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/sns\.amap\.com\/ws\/msgbox\/pull_mp\?/i then reject_dict(200)
 
@@ -42,9 +42,10 @@ request if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:order\/car\/(?:f
 request if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/boss\/(?:pay\/web\/paySuccess\/info\/request|transportation\/diversion\/resource\/driving)/i then reject_dict(200)
 response if ${url} ~= /^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?/i then response.json.delete("data.carTips.data.popupInfo")
 
-# 高德后加的推广接口（原插件没有）：榜单卡、探索页推广文案
+# 按用户要求整条拦截（请求阶段返回空 JSON），不做响应体过滤
 request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/info_bff\/rankingCard(?:\?|$)/i then reject_dict(200)
-response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend(?:\?|$)/i then response.json.jq('if .data then .data.shadingWords = {} else . end')
+request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/search\/nearbyrec_smart(?:\?|$)/i then reject_dict(200)
+request if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas(?:v3)?(?:\?|$)/i then reject_dict(200)
 
 [Script]
 response if ${url} ~= /^https:\/\/m5\.amap\.com\/ws\/aos\/perception\/publicTravel\/beforeNavi\?/i then script("https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js") with tag="移除路线规划推广", requires_body=true
