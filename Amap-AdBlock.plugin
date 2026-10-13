@@ -1,0 +1,47 @@
+#!name = 高德地图去广告（修复版）
+#!desc = 过滤高德地图开屏广告、各页面推广，精简我的页面
+#!author = DeepSeek（原始规则：@RuCu6 @kelv1n1n @可莉）
+#!homepage = https://github.com/Wansensr/loon-amap-adblock
+#!icon = https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/amap-icon.png
+#!system = iOS
+#!type = normal
+#!date = 2026-10-13
+#!tag = 去广告
+
+[Rule]
+# 广告专用域名：整域拒绝，不需要 MitM
+DOMAIN,amap-aos-info-nogw.amap.com,REJECT
+DOMAIN,free-aos-cdn-image.amap.com,REJECT
+DOMAIN,optimus-ads.amap.com,REJECT
+DOMAIN-SUFFIX,v.smtcdns.com,REJECT
+
+[Rewrite]
+# 本文件使用 Loon 3.5.1(978) 起的新版 Rewrite 语法
+# 拦截方式统一用「200 + 空 JSON/空图」，避免开屏卡在等超时
+
+# ===== 开屏广告 =====
+# 实测 2026-10-13：开屏配置由 m5.amap.com/ws/valueadded/alimama/splash_screen 下发
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/valueadded\/alimama\/splash_screen/ then reject_dict(200)
+# 旧路径兜底（原插件命中这里，实测 GET/POST 均已 404）
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/aos\/alimama\// then reject_dict(200)
+
+# ===== 首页 / 搜索页推广 =====
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/scene\/recommend/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/search\/new_hotword/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/faas\/amap-navigation\/main-page-(assets|location)/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/mapapi\/hint_text\/offline_data/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/valueadded\/weather/ then reject_dict(200)
+
+# ===== 消息与推送运营 =====
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/message\/notice\/list/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/msgbox\/pull/ then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/asa\/ads_attribution/ then reject_dict(200)
+
+# ===== 弹窗与广告素材 =====
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/ws\/boss\/order_web\// then reject_dict(200)
+request if ${url} ~= /^https?:\/\/([a-z0-9-]+\.)*amap\.com\/uploadimg\/[A-Za-z0-9]+\.gif/ then reject_img(200)
+request if ${url} ~= /^https?:\/\/render-oss-cdn\.amap\.com\/render\/studio-dev\/image\// then reject_img(200)
+
+[Mitm]
+hostname = *.amap.com
