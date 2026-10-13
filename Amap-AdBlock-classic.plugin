@@ -1,5 +1,5 @@
 #!name=高德地图去广告（修复版·经典语法）
-#!desc = v5 · 同上；老版本 Loon 用这一份
+#!desc = v6 · 同上；老版本 Loon 用这一份
 #!openUrl=https://apps.apple.com/cn/app/id461703208
 #!author=RuCu6, kelv1n1n, 可莉🅥（原插件 hub.kelee.one）；本仓库为自托管修复版
 #!homepage=https://github.com/Wansensr/loon-amap-adblock
@@ -11,7 +11,7 @@
 #!date=2026-10-13
 #
 # 经典 Rewrite 语法版（Loon 3.5.1(978) 之前的老配置用）。新版 Loon 请用 Amap-AdBlock.plugin。
-# 规则逐条取自原插件，不新增拦截项；仅脚本改自托管、开屏改为请求阶段返回空 JSON。
+# 规则取自原插件；脚本改自托管、开屏改为请求阶段返回空 JSON；榜单卡/我的页面活动入口/探索附近页推荐流整条拦截。
 
 [Rule]
 DOMAIN, amap-aos-info-nogw.amap.com, REJECT
@@ -33,7 +33,7 @@ DOMAIN-SUFFIX, v.smtcdns.com, REJECT
 ^https:\/\/m5\.amap\.com\/ws\/aos\/main\/page\/product\/list\? reject-dict
 ^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/(?:main-page-assets|main-page-location|ridewalk-end-fc|usr-profile-fc\/homeV2) reject-dict
 ^https:\/\/m5\.amap\.com\/ws\/(?:mapapi\/hint_text\/offline_data|message\/notice\/list|shield\/search\/new_hotword) reject-dict
-^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend\? reject-dict
+^https:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend(?:\?|$) reject-dict
 ^https:\/\/m5\.amap\.com\/ws\/valueadded\/weather\/v2\? reject-dict
 ^https:\/\/sns\.amap\.com\/ws\/msgbox\/pull_mp\? reject-dict
 
@@ -42,7 +42,8 @@ DOMAIN-SUFFIX, v.smtcdns.com, REJECT
 ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\? response-body-json-del data.carTips.data.popupInfo
 
 ^https?:\/\/m5\.amap\.com\/ws\/info_bff\/rankingCard reject-dict
-^https?:\/\/m5\.amap\.com\/ws\/shield\/scene\/recommend response-body-json-del data.shadingWords
+^https?:\/\/m5\.amap\.com\/ws\/shield\/search\/nearbyrec_smart reject-dict
+^https?:\/\/m5\.amap\.com\/ws\/shield\/dsp\/profile\/index\/nodefaas reject-dict
 
 [Script]
 # 需要改响应体才能摘干净的推广（脚本随本仓库自托管，规则与原插件一致）
