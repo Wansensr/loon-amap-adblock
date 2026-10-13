@@ -68,3 +68,10 @@ v4 起插件里的脚本与图标默认走 jsDelivr。如果你的网络**反而
 `raw.githubusercontent.com` 能通，把插件里所有
 `https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/` 换成
 `https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/` 即可。
+
+## v5（2026-10-13）
+
+- 补齐高德后来新增的推广接口：`m5.amap.com/ws/info_bff/rankingCard`（榜单卡，例如「东北菜热门榜」）直接拒绝；`m5.amap.com/ws/shield/scene/recommend` 只清掉 `data.shadingWords`（探索页推广文案）
+- 「我的」页清理放宽：原插件的 `nodefaasv3` 规则现在同时匹配新版 `nodefaas` 路径（脚本里对应分支同步放宽）
+- 脚本地址从 `@main` 改为固定 commit：`https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@2ce4ec3b73da37967e42ea487cf3749aa9b20c7b/Amap_remove_ads.js`，避免 jsDelivr 对 `@main` 的缓存导致「插件已更新、脚本还是旧的」
+- 其余规则与原插件（2026-10-02 版）逐条一致；经典语法版同样处理
