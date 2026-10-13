@@ -20,6 +20,12 @@ https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/Amap-AdBlock.p
 https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/Amap-AdBlock-classic.plugin
 ```
 
+GitHub 直连不通用 jsDelivr 镜像（有缓存，通常滞后几小时）：
+
+```
+https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap-AdBlock.plugin
+```
+
 ## 添加方法
 
 Loon → 配置 → 插件 → 右上角 `+` → 从 URL 添加 → 粘贴上面的订阅地址。
