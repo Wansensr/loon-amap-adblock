@@ -2,13 +2,14 @@
 
 Loon 插件：高德地图去广告（修复版）。
 
-原始规则来自 kelee.one 的 `Amap_remove_ads` 插件（作者 @RuCu6 @kelv1n1n @可莉），
-并参考社区维护的同类规则（blackmatrix7 / GeQ1an / deezertidal）。
-原插件的开屏拦截针对的接口已经废弃，本仓库是 2026-10-13 按实测接口重写修复的版本。
+规则主体来自 kelee.one 的 `Amap_remove_ads`（作者 [@RuCu6](https://github.com/RuCu6)、[@kelv1n1n](https://github.com/kelv1n1n)、可莉🅥）。
+原插件把「需要修改响应体」的那部分放在 `kelee.one` 域名下的 JS 上（开屏、搜索栏热词、首页资源位、我的页面等），
+该域名失效后这些条目会**整块静默失效**——只靠域名不通是查不出来的。本项目把它改成**自托管**：
+脚本收进本仓库，插件里所有 URL 都指向本仓库，不再依赖任何第三方域名。
 
 ## 订阅地址
 
-主文件（Loon 3.5.1(978) 及以后，新版 Rewrite 语法）：
+主文件（Loon 3.5.1(998) 及以后，新版语法）：
 
 ```
 https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/Amap-AdBlock.plugin
@@ -26,22 +27,27 @@ GitHub 直连不通用 jsDelivr 镜像（有缓存，通常滞后几小时）：
 https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap-AdBlock.plugin
 ```
 
-## 添加方法
+## 添加与更新
 
-Loon → 配置 → 插件 → 右上角 `+` → 从 URL 添加 → 粘贴上面的订阅地址。
+- 添加：Loon → 配置 → 插件 → 右上角 `+` → 从 URL 添加 → 粘贴订阅地址。
+- 更新：进插件详情页点右上角 ⟳。**订阅地址不变，不用删除重加。**
+- 只保留这一个高德插件，不要和 kelee 的原插件同时开启。
 
-如果之前装过 kelee 的「高德地图去广告」，先把它禁用或删除，避免两套规则同时生效。
+## 版本记录
 
-## 更新方法
+- **v1**（2026-10-13）：修复开屏广告。原插件拦截的
+  `amap-aos-info-nogw.amap.com/ws/aos/alimama/` 接口已废弃（实测 GET/POST 均 404），
+  高德开屏配置现在走 `m5.amap.com/ws/valueadded/alimama/splash_screen`（实测 200，服务端版本 3.2-2026-09-16），
+  改为在请求阶段返回 `200 + 空 JSON`，开屏不会卡在等超时。
+- **v2**（2026-10-13）：按原插件规则补齐搜索栏热词、首页资源位与运营位、我的页面、附近页、打车页、
+  路线规划等推广；把原先托管在 `kelee.one` 的 `Amap_remove_ads.js` 收进本仓库自托管。
 
-仓库文件更新后，进入 Loon → 配置 → 插件 → 点进本插件 → 右上角 ⟳ 重新下载即可。
+## 关于脚本
 
-## 2026-10-13 修了什么
+`Amap_remove_ads.js` 是 RuCu6 的 `amap.js` 镜像副本，逻辑未改动（只加了文件头说明）。
+原始引用地址 `raw.githubusercontent.com/RuCu6/Loon/refs/heads/main/Scripts/amap.js` 已于 2026-10-13 核实为 404，
+本副本取自 `Moli-X/Tool` 分支 `X` 的 `Loon/Plugin/Kelee/Script/Amap_remove_ads.js`（2026-03-09 版本）。
 
-- 原插件把开屏广告拦在 `amap-aos-info-nogw.amap.com/ws/aos/alimama/`，实测 GET/POST 都是 404，接口已废弃
-- 高德开屏配置现在走 `m5.amap.com/ws/valueadded/alimama/splash_screen`（实测 200，服务端版本 3.2-2026-09-16）
-- 改为拦 `*.amap.com` 任意子域的该路径，并补齐首页推荐、搜索热词、首页资源位、消息推送、订单弹窗等推广接口
-- 拦截方式从「断开连接」改为返回 `200 + 空 JSON`，开屏不会卡在等超时
-- 规则已逐条脚本校验：实测到的广告接口全部命中，`restapi/mapapi` 等正常接口不受影响
-
-装好后建议先强制退出高德再清一次缓存，否则预加载的旧广告可能还会显示一次。
+如果你的网络访问 `raw.githubusercontent.com` 不稳定，把插件里所有
+`https://raw.githubusercontent.com/Wansensr/loon-amap-adblock/main/Amap_remove_ads.js`
+替换成 `https://cdn.jsdelivr.net/gh/Wansensr/loon-amap-adblock@main/Amap_remove_ads.js` 即可。
